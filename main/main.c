@@ -24,7 +24,6 @@
  *            an image into an array of 1's and 0's
  */
 
-
 /**
  * @name                    i2c_initialize
  * 
@@ -37,7 +36,7 @@
  * @param   scl_pullup_en   Enable or disable pullup
  * @param   clk_speed       Desired clock speed for I2C bus
  * @param   i2c_num         I2C port to use
- */ 
+ */
 static void i2c_initialize(i2c_mode_t mode, int sda_io_num, int scl_io_num, bool sda_pullup_en, bool scl_pullup_en, uint32_t clk_speed, i2c_port_t i2c_num)
 {
   i2c_config_t conf = {
@@ -51,13 +50,20 @@ static void i2c_initialize(i2c_mode_t mode, int sda_io_num, int scl_io_num, bool
   ESP_ERROR_CHECK(i2c_driver_install(i2c_num, conf.mode, 0, 0, 0));
 }
 
-
 void app_main(void)
 {
   i2c_initialize(I2C_MODE_MASTER, I2C_SDA, I2C_SCL, true, true, 100000, I2C_MASTER_PORT); /* Initalize I2C communication with OLED */
   ssd1306_init();
-  // ssd1306_bmp_to_pixel(0, 0, 30, 30, humidity_icon_30x30);
-  // ssd1306_bmp_to_pixel(35, 0, 30, 28, heart_icon_30x28);
-  ssd1306_bmp_to_pixel(0, 0, 115, 64, aim1_decal_115x64);
-  ssd1306_update_screen();
+  while (1)
+  {
+    ssd1306_bmp_to_pixel(0, 0, 30, 30, humidity_icon_30x30);
+    ssd1306_update_screen();
+    vTaskDelay(pdMS_TO_TICKS(1000));
+    ssd1306_bmp_to_pixel(0, 0, 30, 28, heart_icon_30x28);
+    ssd1306_update_screen();
+    vTaskDelay(pdMS_TO_TICKS(1000));
+    ssd1306_bmp_to_pixel(0, 0, 115, 64, aim1_decal_115x64);
+    ssd1306_update_screen();
+    vTaskDelay(pdMS_TO_TICKS(1000));
+  }
 }
